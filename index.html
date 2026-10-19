@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zara 💗 My Little Pookie</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Pacifico&display=swap');
+
+:root {
+    --pink: #ff8fbd;
+    --light-pink: #ffe4ef;
+    --lavender: #e8ddff;
+    --dark-pink: #d94f8a;
+    --white: #fffafd;
+}
+
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    min-height: 100vh;
+    overflow-x: hidden;
+    font-family: 'Quicksand', sans-serif;
+    color: #9b4770;
+    background: linear-gradient(135deg, #ffe4ef, #fff7fb, #e9e0ff);
+    background-attachment: fixed;
+}
+
+button {
+    font-family: inherit;
+    cursor: pointer;
+    touch-action: manipulation;
+}
+
+#background-hearts,
+#confetti {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+#background-hearts {
+    z-index: 0;
+    overflow: hidden;
+}
+
+#confetti {
+    z-index: 10;
+}
+
+.floating-heart {
+    position: absolute;
+    bottom: -50px;
+    animation: floatUp linear forwards;
+    opacity: 0.8;
+}
+
+@keyframes floatUp {
+    to {
+        transform: translateY(-115vh) rotate(40deg);
+        opacity: 0;
+    }
+}
+
+.screen {
+    display: none;
+    min-height: 100vh;
+    position: relative;
+    z-index: 1;
+    padding: 24px 14px;
+    align-items: center;
+    justify-content: center;
+}
+
+.screen.active {
+    display: flex;
+    animation: fadeIn 0.6s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.card {
+    width: 100%;
+    max-width: 580px;
+    padding: 35px 24px;
+    text-align: center;
+    border: 2px solid white;
+    border-radius: 30px;
+    background: rgba(255, 250, 253, 0.9);
+    box-shadow: 0 15px 50px rgba(201, 101, 148, 0.18);
+    backdrop-filter: blur(12px);
+}
+
+h1 {
+    font-family: 'Pacifico', cursive;
+    font-size: clamp(2rem, 8vw, 3.5rem);
+    color: var(--dark-pink);
+    margin-bottom: 18px;
+}
+
+h2 {
+    font-size: clamp(1.4rem, 5vw, 2rem);
+    margin-bottom: 18px;
+    color: var(--dark-pink);
+}
+
+p {
+    font-size: 1rem;
+    line-height: 1.8;
+    margin-bottom: 18px;
+}
+
+.hero-heart {
+    font-size: 75px;
+    animation: heartbeat 1.4s infinite;
+    margin-bottom: 12px;
+}
+
+@keyframes heartbeat {
+    0%, 100% { transform: scale(1); }
+    15% { transform: scale(1.15); }
+    30% { transform: scale(1); }
+    45% { transform: scale(1.1); }
+}
+
+.btn {
+    display: inline-block;
+    padding: 14px 22px;
+    border: none;
+    border-radius: 50px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.btn:hover {
+    transform: translateY(-3px);
+}
+
+.yes-btn {
+    color: white;
+    background: linear-gradient(135deg, #ff8fbd, #e95191);
+    box-shadow: 0 7px 20px #ef83b455;
+    animation: heartbeat 1.8s infinite;
+}
+
+.secondary-btn {
+    color: #bd5785;
+    background: white;
+    border: 1px solid #ffd1e3;
+}
+
+.button-row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 14px;
+    margin-top: 25px;
+}
+
+.heart-stage {
+    position: relative;
+    width: min(100%, 320px);
+    height: 240px;
+    margin: 10px auto 20px;
+}
+
+.heart-particle {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    font-size: 19px;
+    color: #ff6da8;
+    opacity: 0;
+    animation: gather 1.7s ease forwards;
+}
+
+@keyframes gather {
+    0% {
+        transform: translate(var(--startX), var(--startY)) scale(0.2);
+        opacity: 0;
+    }
+    60% {
+        opacity: 1;
+    }
+    100% {
+        transform: translate(var(--endX), var(--endY)) scale(1);
+        opacity: 1;
+    }
+}
+
+.heart-name {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    font-family: 'Pacifico', cursive;
+    font-size: 28px;
+    color: #d94f8a;
+    text-shadow: 0 0 12px white;
+}
+
+.message {
+    white-space: pre-line;
+    text-align: left;
+    line-height: 1.9;
+}
+
+.proposal-heart {
+    font-size: 65px;
+    margin-bottom: 15px;
+    animation: heartbeat 1.5s infinite;
+}
+
+.proposal-buttons {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 14px;
+    min-height: 100px;
+    margin-top: 20px;
+}
+
+#rejectButton {
+    position: relative;
+    z-index: 2;
+    background: white;
+    color: #c55b8c;
+    border: 1px solid #ffd0e2;
+    transition: left 0.15s ease, top 0.15s ease;
+}
+
+.chat {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-width: 450px;
+    margin: 25px auto;
+    text-align: left;
+}
+
+.bubble {
+    padding: 13px 16px;
+    border-radius: 20px;
+    max-width: 90%;
+    line-height: 1.6;
+    animation: fadeIn 0.4s ease;
+}
+
+.bubble.me {
+    align-self: flex-end;
+    background: #ffd8e8;
+    border-bottom-right-radius: 5px;
+}
+
+.bubble.zara {
+    align-self: flex-start;
+    background: white;
+    border: 1px solid #ffe0ec;
+    border-bottom-left-radius: 5px;
+}
+
+.sender {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 700;
+    margin-bottom: 4px;
+    color: #bd5785;
+}
+
+.gallery {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    margin: 25px 0;
+}
+
+.photo-card {
+    padding: 8px;
+    background: white;
+    border-radius: 18px;
+    box-shadow: 0 5px 18px #d78aaa22;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.photo-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 22px #d78aaa44;
+}
+
+.photo-card img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    border-radius: 13px;
+}
+
+.caption {
+    font-size: 0.85rem;
+    font-weight: 700;
+    padding: 9px 3px 3px;
+    line-height: 1.5;
+    color: #bd5785;
+}
+
+.reunion-scene {
+    position: relative;
+    height: 260px;
+    overflow: hidden;
+    border-radius: 25px;
+    margin: 20px 0;
+    background: linear-gradient(#ffc7dd, #ffe8e6, #e4d7ff);
+}
+
+.ground {
+    position: absolute;
+    bottom: 0;
+    height: 55px;
+    width: 100%;
+    background: #dcb9dc;
+    border-radius: 50% 50% 0 0;
+}
+
+.character {
+    position: absolute;
+    bottom: 35px;
+    width: 65px;
+    height: 120px;
+    transition: left 1.5s ease;
+}
+
+.character .head {
+    position: absolute;
+    top: 0;
+    left: 12px;
+    width: 42px;
+    height: 43px;
+    border-radius: 50%;
+    background: #f2c5a8;
+    border: 2px solid white;
+    z-index: 2;
+}
+
+.character .hair {
+    position: absolute;
+    top: -5px;
+    left: 8px;
+    width: 49px;
+    height: 27px;
+    background: #714b55;
+    border-radius: 50% 50% 25% 25%;
+    z-index: 3;
+}
+
+.character .body {
+    position: absolute;
+    top: 38px;
+    left: 5px;
+    width: 56px;
+    height: 73px;
+    border-radius: 22px 22px 8px 8px;
+    background: #b9a5f4;
+    border: 2px solid white;
+}
+
+.character .arm {
+    position: absolute;
+    top: 52px;
+    width: 35px;
+    height: 13px;
+    background: #f2c5a8;
+    border-radius: 15px;
+    z-index: 4;
+    transition: transform 0.8s;
+}
+
+.boy {
+    left: 8%;
+}
+
+.girl {
+    left: 78%;
+}
+
+.girl .hair {
+    background: #99545f;
+}
+
+.girl .body {
+    background: #ff91ba;
+}
+
+.reunion-scene.hug .boy {
+    left: calc(50% - 60px);
+}
+
+.reunion-scene.hug .girl {
+    left: calc(50% - 5px);
+}
+
+.reunion-scene.hug .boy .arm {
+    transform: rotate(-35deg) translate(10px, -5px);
+}
+
+.reunion-scene.hug .girl .arm {
+    transform: rotate(35deg) translate(-10px, -5px);
+}
+
+.scene-heart {
+    position: absolute;
+    left: 47%;
+    top: 20px;
+    font-size: 40px;
+    opacity: 0;
+    transition: opacity 0.7s 1.2s;
+}
+
+.reunion-scene.hug .scene-heart {
+    opacity: 1;
+    animation: heartbeat 1.5s infinite;
+}
+
+.lightbox {
+    position: fixed;
+    inset: 0;
+    z-index: 30;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: rgba(60, 35, 52, 0.85);
+}
+
+.lightbox.open {
+    display: flex;
+}
+
+.lightbox img {
+    max-width: 100%;
+    max-height: 85vh;
+    border-radius: 18px;
+}
+
+.close-lightbox {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    width: 45px;
+    height: 45px;
+    border: none;
+    border-radius: 50%;
+    font-size: 25px;
+    background: white;
+    color: #bd5785;
+}
+
+@media (max-width: 380px) {
+    .card { padding: 26px 16px; }
+    .btn { padding: 12px 15px; font-size: 0.88rem; }
+}
+
+@media (min-width: 600px) {
+    .gallery { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div id="background-hearts"></div>
+<canvas id="confetti"></canvas>
+
+<!-- Background Music: Until I Found You -->
+<audio id="bgMusic" loop>
+    <source src="Until I Found You.mp3" type="audio/mpeg">
+</audio>
+
+<main>
+
+<section class="screen active" id="welcome">
+    <div class="card">
+        <div class="hero-heart">💗</div>
+        <h1>Hey, Zaraaa! 🎀</h1>
+        <p>I made something special just for you...</p>
+        <p>There's something I've wanted to tell you for a while. 💌</p>
+        <div class="button-row">
+            <button class="btn yes-btn" data-next="heart">Open Your Surprise 💌</button>
+        </div>
+        <div class="button-row">
+            <button class="btn secondary-btn" id="musicButton">♫ Turn On Music (Until I Found You)</button>
+        </div>
+    </div>
+</section>
+
+<section class="screen" id="heart">
+    <div class="card">
+        <h2>A little heart, just for you 💗</h2>
+        <div class="heart-stage" id="heartStage">
+            <div class="heart-name">Zara ♡</div>
+        </div>
+        <h2>Some feelings never really leave... 💕</h2>
+        <p>Sometimes, time apart helps us understand what truly matters.</p>
+        <div class="button-row">
+            <button class="btn yes-btn" data-next="message">Continue, Zara 🌷</button>
+        </div>
+    </div>
+</section>
+
+<section class="screen" id="message">
+    <div class="card">
+        <h2>A message from my heart 💌</h2>
+        <p class="message" id="typedMessage"></p>
+        <p style="margin-top:20px">Can I ask you something, Zara? 🥺</p>
+        <div class="button-row">
+            <button class="btn yes-btn" data-next="proposal">Tell Me 💗</button>
+        </div>
+    </div>
+</section>
+
+<section class="screen" id="proposal">
+    <div class="card">
+        <div class="proposal-heart">💖</div>
+        <h1>Zara, would you give us another chance?</h1>
+        <p>I still care about you. I know we cannot change the past, but maybe we can create something better together. 💗</p>
+        <p>Whatever your answer is, I'll respect your feelings.</p>
+
+        <div class="proposal-buttons" id="proposalButtons">
+            <button class="btn yes-btn" id="acceptButton">
+                YES, LET'S TRY AGAIN! 💖
+            </button>
+
+            <button class="btn" id="rejectButton">
+                NO, SORRY 🥺
+            </button>
+        </div>
+
+        <p id="rejectMessage" aria-live="polite"></p>
+
+        <button class="btn secondary-btn" id="declineAnyway" style="margin-top:10px">
+            I really want to say no
+        </button>
+    </div>
+</section>
+
+<section class="screen" id="accepted">
+    <div class="card">
+        <div class="hero-heart">😭💗</div>
+        <h1>WAIT... YOU SAID YES?!</h1>
+        <p>Zara, you have no idea how happy this makes me.</p>
+        <p>I know we can't change what happened before, but maybe we can write a better chapter together. We don't have to rush anything. Let's take it slowly, communicate honestly, and make new memories together. 🫶</p>
+        <div class="button-row">
+            <button class="btn yes-btn" data-next="chatScreen">One More Thing... 💌</button>
+        </div>
+    </div>
+</section>
+
+<section class="screen" id="chatScreen">
+    <div class="card">
+        <h2>A little imaginary conversation 💬</h2>
+        <p>This is a scripted story, not a real conversation with Zara.</p>
+        <div class="chat" id="chat"></div>
+        <div class="button-row" id="chatContinue" hidden>
+            <button class="btn yes-btn" data-next="galleryScreen">Our Memories 💕</button>
+        </div>
+    </div>
+</section>
+
+<section class="screen" id="galleryScreen">
+    <div class="card">
+        <h2>Our Little Memories 📸</h2>
+        <p>Six moments of your smile that brighten up my world. 💗</p>
+        
+        <div class="gallery" id="gallery">
+            <!-- IMG 1 -->
+            <div class="photo-card" onclick="openLightbox('img1.jpg')">
+                <img src="img1.jpg" alt="Zara Photo 1">
+                <div class="caption">Memory #1 💕</div>
+            </div>
+
+            <!-- IMG 2 -->
+            <div class="photo-card" onclick="openLightbox('img2.jpg')">
+                <img src="img2.jpg" alt="Zara Photo 2">
+                <div class="caption">Memory #2 💕</div>
+            </div>
+
+            <!-- IMG 3 -->
+            <div class="photo-card" onclick="openLightbox('img3.jpg')">
+                <img src="img3.jpg" alt="Zara Photo 3">
+                <div class="caption">Memory #3 💕</div>
+            </div>
+
+            <!-- IMG 4 -->
+            <div class="photo-card" onclick="openLightbox('img4.jpg')">
+                <img src="img4.jpg" alt="Zara Photo 4">
+                <div class="caption">Memory #4 💕</div>
+            </div>
+
+            <!-- IMG 5 -->
+            <div class="photo-card" onclick="openLightbox('img5.jpg')">
+                <img src="img5.jpg" alt="Zara Photo 5">
+                <div class="caption">Memory #5 💕</div>
+            </div>
+
+            <!-- IMG 6 -->
+            <div class="photo-card" onclick="openLightbox('img6.jpg')">
+                <img src="img6.jpg" alt="Zara Photo 6">
+                <div class="caption">Memory #6 💕</div>
+            </div>
+        </div>
+
+        <p>Every memory has a story. Maybe ours still has another chapter. 💌</p>
+        <div class="button-row">
+            <button class="btn yes-btn" data-next="ending">The Final Surprise ✨</button>
+        </div>
+    </div>
+</section>
+
+<section class="screen" id="ending">
+    <div class="card">
+        <h2>Two Hearts Finding Their Way 💞</h2>
+
+        <div class="reunion-scene" id="reunionScene">
+            <div class="ground"></div>
+            <div class="scene-heart">💗</div>
+
+            <div class="character boy">
+                <div class="hair"></div>
+                <div class="head"></div>
+                <div class="body"></div>
+                <div class="arm" style="left:40px"></div>
+            </div>
+
+            <div class="character girl">
+                <div class="hair"></div>
+                <div class="head"></div>
+                <div class="body"></div>
+                <div class="arm" style="left:-10px"></div>
+            </div>
+        </div>
+
+        <h2>Zara, I'm so happy we have another chance. 💗</h2>
+
+        <p>Maybe this is our new beginning—not a perfect story, but one where we try to understand each other, care for each other, and grow together.</p>
+
+        <p>Thank you for giving us a chance to write another chapter. I'll cherish the opportunity, and we'll take it one step at a time. 🫶</p>
+
+        <div class="hero-heart">💖</div>
+        <h1>YOU & ME, A NEW CHAPTER.</h1>
+
+        <div class="button-row">
+            <button class="btn yes-btn" id="replayButton">Replay Our Little Story 🎀</button>
+        </div>
+    </div>
+</section>
+
+<section class="screen" id="declined">
+    <div class="card">
+        <div class="hero-heart">🌷</div>
+        <h1>It's okay, Zara.</h1>
+        <p>Thank you for being honest with me. I respect your feelings and your decision. I won't pressure you, and I genuinely wish you happiness. 💗</p>
+        <div class="button-row">
+            <button class="btn secondary-btn" id="replayDeclined">Return to Beginning</button>
+        </div>
+    </div>
+</section>
+
+</main>
+
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Expanded photo">
+    <button class="close-lightbox" id="closeLightbox" aria-label="Close photo">×</button>
+    <img id="lightboxImage" alt="Memory photo">
+</div>
+
+<script>
+const proposalMessage = `Hey, Zara. It's been months since we last talked, and a lot has happened since then. I know things didn't work out between us, and I know we can't simply erase the past. But during all this time, I've had a lot of chances to think about us, the memories we shared, and the things I could've done better.
+
+I'm not here to pretend nothing happened or to pressure you into anything. I just want to be honest about how I feel. A part of me still hopes that, someday, we might find our way back to each other.
+
+I miss what we had, and if you're willing, I'd love to start again—not by rushing into the past, but by getting to know each other again, one conversation at a time. 💗`;
+
+const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const $ = selector => document.querySelector(selector); const $$ = selector => [...document.querySelectorAll(selector)];
+
+let typingTimer;
+let chatTimers = [];
+let rejectAttempts = 0;
+const audio = $('#bgMusic');
+
+// Audio setup
+$('#musicButton').addEventListener('click', () => {
+    if (audio.paused) {
+        audio.play().then(() => {
+            $('#musicButton').textContent = '♫ Music Playing (Until I Found You) 💕';
+        }).catch(() => {
+            alert('Please click anywhere on the page to allow music playback.');
+        });
+    } else {
+        audio.pause();
+        $('#musicButton').textContent = '♫ Turn On Music (Until I Found You)'; } });  function showScreen(id) { clearTimeout(typingTimer); chatTimers.forEach(clearTimeout); chatTimers = [];      if (audio.paused && id !== 'welcome') { audio.play().catch(() => {}); }      $$('.screen').forEach(screen => {
+        screen.classList.toggle('active', screen.id === id);
+    });
+
+    window.scrollTo({
+        top: 0,
+        behavior: reducedMotion ? 'auto' : 'smooth'
+    });
+
+    if (id === 'heart') createHeart();
+    if (id === 'message') typeMessage();
+    if (id === 'chatScreen') startChat();
+
+    if (id === 'ending') {
+        $('#reunionScene').classList.remove('hug');
+        setTimeout(() => {
+            $('#reunionScene').classList.add('hug'); confettiBurst(); }, reducedMotion ? 0 : 400); } }  $$('[data-next]').forEach(button => {
+    button.addEventListener('click', () => showScreen(button.dataset.next));
+});
+
+function createFloatingDecoration() {
+    const container = $('#background-hearts');
+    const element = document.createElement('span');
+
+    element.className = 'floating-heart';
+    element.textContent = ['♡', '♥', '💕', '✧', '🌸'][Math.floor(Math.random() * 5)];
+    element.style.left = Math.random() * 100 + '%';
+    element.style.fontSize = 14 + Math.random() * 20 + 'px';
+    element.style.animationDuration = 7 + Math.random() * 7 + 's';
+
+    container.appendChild(element);
+    setTimeout(() => element.remove(), 15000);
+}
+
+for (let i = 0; i < 12; i++) {
+    setTimeout(createFloatingDecoration, i * 200);
+}
+setInterval(createFloatingDecoration, 800);
+
+let heartCreated = false;
+
+function createHeart() {
+    if (heartCreated) return;
+    heartCreated = true;
+
+    const stage = $('#heartStage');
+
+    for (let i = 0; i < 76; i++) {
+        const angle = i / 76 * Math.PI * 2;
+        const x = 16 * Math.pow(Math.sin(angle), 3);
+        const y = -(13 * Math.cos(angle)
+            - 5 * Math.cos(2 * angle)
+            - 2 * Math.cos(3 * angle)
+            - Math.cos(4 * angle));
+
+        const particle = document.createElement('span');
+        particle.className = 'heart-particle';
+        particle.textContent = i % 5 === 0 ? '♡' : '♥';
+
+        particle.style.setProperty('--startX', `${(Math.random() - .5) * 300}px`);
+        particle.style.setProperty('--startY', `${(Math.random() - .5) * 230}px`);
+        particle.style.setProperty('--endX', `${x * 5.1}px`);
+        particle.style.setProperty('--endY', `${y * 5.1}px`);
+        particle.style.animationDelay = `${reducedMotion ? 0 : i * 15}ms`;
+
+        stage.appendChild(particle);
+    }
+}
+
+function typeMessage() {
+    const element = $('#typedMessage');
+    element.textContent = '';
+    let index = 0;
+
+    function typeNext() {
+        if (index >= proposalMessage.length) return;
+        element.textContent += proposalMessage[index++];
+        typingTimer = setTimeout(typeNext, reducedMotion ? 0 : 17);
+    }
+    typeNext();
+}
+
+const rejectButton = $('#rejectButton');
+const proposalButtons = $('#proposalButtons');
+const rejectMessage = $('#rejectMessage');
+
+function moveRejectButton() {
+    if (rejectAttempts >= 10) {
+        rejectMessage.textContent = 'Hehe, this button is getting tired! 🙈 You can still choose what feels right.';
+        return;
+    }
+
+    rejectAttempts++;
+    const area = proposalButtons.getBoundingClientRect();
+    const button = rejectButton.getBoundingClientRect();
+
+    const maxX = Math.max(0, area.width - button.width);
+    const maxY = 80;
+
+    const newX = Math.random() * maxX;
+    const newY = (Math.random() - 0.5) * maxY;
+
+    rejectButton.style.position = 'relative';
+    rejectButton.style.left = `${newX - area.width / 2 + button.width / 2}px`;
+    rejectButton.style.top = `${newY}px`;
+    rejectButton.style.transform = `rotate(${Math.random() * 12 - 6}deg)`;
+
+    rejectMessage.textContent = [
+        'Hehe, too slow! 🙈💗',
+        'Oopsie, the button ran away! 🎀',
+        'Catch me if you can! 💕',
+        'That button is shy today! 🌷'
+    ][rejectAttempts % 4];
+}
+
+rejectButton.addEventListener('mouseover', moveRejectButton);
+rejectButton.addEventListener('click', moveRejectButton);
+
+$('#acceptButton').addEventListener('click', () => {
+    showScreen('accepted');
+});
+
+$('#declineAnyway').addEventListener('click', () => {
+    showScreen('declined');
+});
+
+$('#replayButton').addEventListener('click', () => {
+    rejectAttempts = 0;
+    rejectButton.style.left = '0px';
+    rejectButton.style.top = '0px';
+    rejectMessage.textContent = '';
+    showScreen('welcome');
+});
+
+$('#replayDeclined').addEventListener('click', () => {
+    rejectAttempts = 0;
+    rejectButton.style.left = '0px';
+    rejectButton.style.top = '0px';
+    rejectMessage.textContent = '';
+    showScreen('welcome');
+});
+
+// Chat script simulation
+function startChat() {
+    const chatContainer = $('#chat');
+    chatContainer.innerHTML = '';
+    $('#chatContinue').hidden = true;
+
+    const conversation = [
+        { sender: 'me', text: 'Hey Zara... thank you for listening to me.' },
+        { sender: 'zara', text: 'Hey. I appreciate you being honest about everything.' },
+        { sender: 'me', text: 'Do you want to grab coffee sometime and catch up properly? No pressure at all.' },
+        { sender: 'zara', text: 'I would actually love that. Let’s take it slow. ☕️💗' }
+    ];
+
+    conversation.forEach((msg, idx) => {
+        const timer = setTimeout(() => {
+            const bubble = document.createElement('div');
